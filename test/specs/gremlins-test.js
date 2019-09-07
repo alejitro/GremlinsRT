@@ -7,6 +7,9 @@ function loadScript(callback) {
     s.onreadystatechange = callback;
   }
   document.body.appendChild(s);
+  var d = document.createElement('script');
+  d.src = 'https://code.jquery.com/jquery-3.4.1.min.js';
+  document.body.appendChild(d);
 }
 
 function unleashGremlins(ttl, callback) {
@@ -15,6 +18,24 @@ function unleashGremlins(ttl, callback) {
     callback();
   }
   var horde = window.gremlins.createHorde();
+  horde.gremlin(gremlins.species.formFiller().canFillElement(function(){
+      return $('input').length;
+  }))
+  .gremlin(gremlins.species.clicker().clickTypes(['click'])
+    .canClick(function() {
+        return $('a,button').length;
+    }))
+  .strategy(gremlins.strategies.distribution()
+				.delay(50)
+				.distribution([
+					0.3, // formFiller
+					0.7, // clicker
+				])
+	)
+  .gremlin(function() {
+      window.$ = function() {};
+  });
+
   horde.seed(1234);
 
   horde.after(callback);
@@ -25,7 +46,7 @@ function unleashGremlins(ttl, callback) {
 
 describe('Monkey testing with gremlins ', function() {
 
-  it('it should not raise any error', function() {
+  it('it should click on buttons and links and fill form elements', function() {
     browser.url('/');
     browser.click('button=Cerrar');
 
@@ -39,6 +60,7 @@ describe('Monkey testing with gremlins ', function() {
   afterAll(function() {
     browser.log('browser').value.forEach(function(log) {
       browser.logger.info(log.message.split(' ')[2]);
+      //browser.logger.info(log.message);
     });
   });
 
