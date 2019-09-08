@@ -23,7 +23,13 @@ function unleashGremlins(ttl, callback) {
   }))
   .gremlin(gremlins.species.clicker().clickTypes(['click'])
     .canClick(function() {
-        return $('a,button').length;
+        var elements = $('a,button');
+        if(elements>0){
+            return elements.length;
+        }else {
+            setTimeout(stop, ttl);
+        }
+
     }))
   .strategy(gremlins.strategies.distribution()
 				.delay(50)
