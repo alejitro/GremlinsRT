@@ -23,12 +23,9 @@ function unleashGremlins(ttl, callback) {
   }))
   .gremlin(gremlins.species.clicker().clickTypes(['click'])
     .canClick(function() {
-        var elements = $('a,button');
-        if(elements>0){
-            return elements.length;
-        }else {
-            setTimeout(stop, ttl);
-        }
+        var elements = $('button,a');
+        console.log("Elementos: ", elements);
+        return elements.length;
 
     }))
   .strategy(gremlins.strategies.distribution()
