@@ -19,13 +19,23 @@ function unleashGremlins(ttl, callback) {
   }
   var horde = window.gremlins.createHorde();
   horde.gremlin(gremlins.species.formFiller().canFillElement(function(){
-      return $('input').length;
+      var element=$('input');
+      if(element.is(":visible")){
+        return element.length;
+      }else{
+        horde.stop();
+      }
+
   }))
   .gremlin(gremlins.species.clicker().clickTypes(['click'])
     .canClick(function() {
         var elements = $('button,a');
         console.log("Elementos: ", elements);
-        return elements.length;
+        if(elements.is(":visible")){
+            return elements.length;
+        }else{
+          horde.stop();
+        }
 
     }))
   .strategy(gremlins.strategies.distribution()
